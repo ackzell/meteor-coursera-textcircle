@@ -1,0 +1,88 @@
+<template name="docItem">
+
+    <div class="container">
+
+    <div class="row">
+        <div class="col-xs-12">
+            {{> docMeta}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            {{> editingUsers}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+            {{> editor}}
+        </div>
+        <div class="col-xs-6">
+            {{> viewer}}
+        </div>
+    </div>
+
+        {{> insertCommentForm}}
+
+
+
+    </div>
+</template>
+
+<template name="editor">
+    {{> sharejsCM docid=docid id="editor" onRender=config}}
+</template>
+
+<template name="viewer">
+    <iframe src="" id="viewer_iframe" frameborder="0"></iframe>
+</template>
+
+<template name="editingUsers">
+    Editors: {{#each users}}
+        <span class="label label-success">{{firstname}}</span>
+    {{/each}}
+</template>
+
+<template name="docMeta">
+    {{#with document}}
+        <span class="h1">{{> editableText collection="documents" field="title"}}</span>
+        {{#if canEdit}}
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="js-tog-privacy" checked="{{isPrivate}}"> Private
+                </label>
+            </div>
+        {{/if}}
+    {{/with}}
+</template>
+
+<template name="commentList">
+    <ul>
+        {{#each comments}}
+            <li>
+                {{title}}
+                <p>{{body}}</p>
+            </li>
+        {{/each}}
+    </ul>
+</template>
+
+<template name="insertCommentForm">
+    {{#autoForm collection="Comments"
+            id="insertCommentForm"
+            type="method"
+            meteormethod="addComment"}}
+    <fieldset>
+        <legend>Comment</legend>
+        {{> afQuickField name='title'}}
+        {{> afQuickField name='body' rows=6 value="Insert comment here"}}
+        {{> afQuickField name='docId' type="hidden" value=docId}}
+    </fieldset>
+    <button type="submit" class="btn btn-primary">Insert</button>
+    {{/autoForm}}
+    {{!-- {{> quickForm collection="Comments"
+            id="insertCommentForm"
+            type="method"
+            meteormetdhod="addComment"}} --}}
+</template>
